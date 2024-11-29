@@ -46,7 +46,7 @@ jobs:
           done
           echo -e "$CHARTS" > charts_list.txt
           echo "::set-output name=charts_list::$CHARTS"
-          cat chart_list.txt
+          cat charts_list.txt
 
       - name: Update README.md
         run: |
