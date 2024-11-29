@@ -1,0 +1,68 @@
+name: Update README with Helm Charts in gh-pages
+
+on:
+  workflow_run:
+    workflows: ["Release Charts"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages  # Ensure we are on the main branch
+
+      # - name: Checkout gh-pages Branch
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: ${{ github.repository }}
+      #     path: gh-pages
+      #     ref: gh-pages  # Fetch the gh-pages branch
+
+      - name: Install yq
+        run: |
+          sudo wget -O /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.27.5/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Generate Charts List
+        id: generate_charts
+        run: |
+          ls
+          CHARTS=""
+          INDEX_FILE="./index.yaml"
+          COUNT=$(yq eval '.entries | length' $INDEX_FILE)
+          echo "Found $COUNT charts."
+          for CHART in $(yq eval '.entries | keys | .[]' $INDEX_FILE); do
+            VERSION=$(yq eval ".entries[\"$CHART\"][0].version" $INDEX_FILE)
+            APP_VERSION=$(yq eval ".entries[\"$CHART\"][0].appVersion" $INDEX_FILE)
+            DESCRIPTION=$(yq eval ".entries[\"$CHART\"][0].description" $INDEX_FILE)
+            CHARTS="$CHARTS\n- **$CHART** (v$VERSION): $DESCRIPTION"
+          done
+          echo -e "$CHARTS" > charts_list.txt
+          echo "::set-output name=charts_list::$CHARTS"
+          cat charts_list.txt
+
+      - name: Update README.md
+        run: |
+          START_MARKER="<!-- BEGIN CHARTS LIST -->"
+          END_MARKER="<!-- END CHARTS LIST -->"
+          sed -i "/$START_MARKER/,/$END_MARKER/{//!d;}" README.md
+          sed -i "/$START_MARKER/ r charts_list.txt" README.md
+          cat README.md
+
+      - name: Commit Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add README.md
+          git commit -m "Update charts list in README" || echo "No changes to commit"
+          git push
