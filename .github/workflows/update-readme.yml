@@ -46,6 +46,7 @@ jobs:
           done
           echo -e "$CHARTS" > charts_list.txt
           echo "::set-output name=charts_list::$CHARTS"
+          cat chart_list.txt
 
       - name: Update README.md
         run: |
@@ -53,6 +54,7 @@ jobs:
           END_MARKER="<!-- END CHARTS LIST -->"
           sed -i "/$START_MARKER/,/$END_MARKER/{//!d;}" README.md
           sed -i "/$START_MARKER/ r charts_list.txt" README.md
+          cat README.md
 
       - name: Commit Changes
         env:
