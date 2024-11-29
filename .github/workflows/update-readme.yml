@@ -1,4 +1,4 @@
-name: Update README with Helm Charts
+name: Update README with Helm Charts in gh-pages
 
 on:
   workflow_run:

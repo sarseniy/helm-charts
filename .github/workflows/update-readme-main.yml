@@ -1,4 +1,4 @@
-name: Update README with Helm Charts
+name: Update README with Helm Charts in main
 
 on:
   workflow_run:
@@ -35,7 +35,7 @@ jobs:
         id: generate_charts
         run: |
           CHARTS=""
-          INDEX_FILE="index.yaml"
+          INDEX_FILE="gh-pages/index.yaml"
           COUNT=$(yq eval '.entries | length' $INDEX_FILE)
           echo "Found $COUNT charts."
           for CHART in $(yq eval '.entries | keys | .[]' $INDEX_FILE); do
