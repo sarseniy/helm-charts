@@ -2,5 +2,5 @@ apiVersion: v2
 name: mongo-atlas-chart
 description: A Helm chart for deploying Atlas MongoDB
 type: application
-version: 0.1.0
+version: 0.1.1
 appVersion: "latest" 
