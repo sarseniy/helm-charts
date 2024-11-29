@@ -1,5 +1,7 @@
 # My Helm Charts Repo
 
+Link to the repo: [click](https://sarseniy.github.io/helm-charts/)
+
 ## Charts list
 <!-- BEGIN CHARTS LIST -->
 
