@@ -1,0 +1,26 @@
+name: Release Charts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'charts/**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Setup Helm
+      uses: azure/setup-helm@v3
+
+    - name: Run chart-releaser
+      uses: helm/chart-releaser-action@v1.3.0
+      env:
+        CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CR_OWNER: sarseniy
+        CR_REPO: helm-charts
+        CR_PACKAGE_PATH: charts

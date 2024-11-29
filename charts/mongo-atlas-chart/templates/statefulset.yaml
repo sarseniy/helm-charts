@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "mongo-atlas-chart.fullname" . }}
+  labels:
+    app: {{ include "mongo-atlas-chart.name" . }}
+    chart: {{ include "mongo-atlas-chart.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  serviceName: {{ include "mongo-atlas-chart.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "mongo-atlas-chart.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "mongo-atlas-chart.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: mongodb
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+              name: mongodb
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data/db
+            - name: config-volume
+              mountPath: /data/configdb
+          resources:
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+              cpu: "{{ .Values.resources.requests.cpu }}"
+            limits:
+              memory: "{{ .Values.resources.limits.memory }}"
+              cpu: "{{ .Values.resources.limits.cpu }}"
+      nodeSelector: {{ toYaml .Values.nodeSelector | indent 6 }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data-volume
+        labels:
+          app: {{ include "mongo-atlas-chart.name" . }}
+          release: {{ .Release.Name }}
+      spec:
+        accessModes: {{ .Values.persistence.data.accessModes }}
+        storageClassName: {{ default .Values.persistence.data.storageClass }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.data.size }}
+    - metadata:
+        name: config-volume
+        labels:
+          app: {{ include "mongo-atlas-chart.name" . }}
+          release: {{ .Release.Name }}
+      spec:
+        accessModes: {{ .Values.persistence.config.accessModes }}
+        storageClassName: {{ default .Values.persistence.config.storageClass }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.config.size }}

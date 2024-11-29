@@ -1,0 +1,35 @@
+replicaCount: 2
+
+image:
+  repository: mongodb/mongodb-atlas-local
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  name: mongodb-service
+  type: ClusterIP  # Change to NodePort or LoadBalancer if needed
+  port: 27017
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "500m"
+  limits:
+    memory: "1Gi"
+    cpu: "1"
+
+persistence:
+  data:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    storageClass: ""  # Set to "-" to disable dynamic provisioning or specify your storage class
+    size: 10Gi
+  config:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    storageClass: ""
+    size: 1Gi
+
+nodeSelector: {}

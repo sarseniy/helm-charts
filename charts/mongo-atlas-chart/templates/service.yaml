@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mongo-atlas-chart.fullname" . }}
+  labels:
+    app: {{ include "mongo-atlas-chart.name" . }}
+    chart: {{ include "mongo-atlas-chart.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.port }}
+      protocol: TCP
+      name: mongodb
+  selector:
+    app: {{ include "mongo-atlas-chart.name" . }}
+    release: {{ .Release.Name }}
