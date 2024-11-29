@@ -34,8 +34,9 @@ jobs:
       - name: Generate Charts List
         id: generate_charts
         run: |
+          ls
           CHARTS=""
-          INDEX_FILE="index.yaml"
+          INDEX_FILE="./index.yaml"
           COUNT=$(yq eval '.entries | length' $INDEX_FILE)
           echo "Found $COUNT charts."
           for CHART in $(yq eval '.entries | keys | .[]' $INDEX_FILE); do
