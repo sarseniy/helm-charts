@@ -3,6 +3,16 @@ entries:
   mongo-atlas-chart:
   - apiVersion: v2
     appVersion: latest
+    created: "2025-02-22T14:49:08.856394717Z"
+    description: A Helm chart for deploying Atlas MongoDB
+    digest: 401134e2f4490ff48c4dae5b82d680a264d750ca96e95111430a9115ea9f1547
+    name: mongo-atlas-chart
+    type: application
+    urls:
+    - https://github.com/sarseniy/helm-charts/releases/download/mongo-atlas-chart-0.1.3/mongo-atlas-chart-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: latest
     created: "2024-11-29T10:49:56.564508072Z"
     description: A Helm chart for deploying Atlas MongoDB
     digest: 8126a51d49829b75bebc77da23f805491ebea7e9a3288cf4879fb6adc9b08117
@@ -21,4 +31,4 @@ entries:
     urls:
     - https://github.com/sarseniy/helm-charts/releases/download/mongo-atlas-chart-0.1.1/mongo-atlas-chart-0.1.1.tgz
     version: 0.1.1
-generated: "2024-11-29T10:49:56.564520305Z"
+generated: "2025-02-22T14:49:08.85640737Z"
